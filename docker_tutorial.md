@@ -97,13 +97,23 @@ Here’s your tutorial revised so it works correctly with **Quay.io BioContainer
 
 ---
 
+Perfect — thanks for clarifying. Since in your workshop/tutorial students will **cd into a working directory after pulling the image**, they’ll run into the same “file not found” issue unless we show them how to either (1) reference the `.sif` with its absolute path, or (2) move it into the working directory. And since their data will be in a separate folder (not in your `/hb/home/hdheath/...`), we should also explicitly teach them how to handle paths and mounts.
+
+Here’s how I’d update your tutorial to make this fool-proof:
+
+---
+
+Got it 👍 — here’s the tutorial rewritten so **students use their own working directories** with **placeholders** (`/path/to/...`) instead of your personal `/hb/home/hdheath/...` paths. That way they can adapt it no matter where they’re running.
+
+---
+
 # 🧬 Bioinformatics Workflow Example with Singularity
 
 Now that you know how to pull and run containers, let’s run a **mini bioinformatics pipeline** using BioContainers.
 
 We’ll go through three steps:
 
-1. **FastQC** – quality control of reads
+1. **FastQC** – quality control of sequencing reads
 2. **BWA** – aligning reads to a reference genome
 3. **SAMtools** – converting, sorting, and generating alignment stats
 
@@ -111,26 +121,48 @@ This will give you a taste of how containers are used in real research workflows
 
 ---
 
+## Step 0: Set Up Your Working Directory
+
+First, create a clean working folder and copy the required files into it:
+
+```bash
+mkdir -p docker_tutorial
+cd docker_tutorial
+
+# Copy reference genome, assembly, and mock reads into your workdir
+cp /hb/home/hdheath/bmeb_bootcamp_2025/tardigrade_reference_genome.fa .
+cp /hb/home/hdheath/bmeb_bootcamp_2025/tardigrade.fastq .
+```
+
+Check that the files are in place:
+
+```bash
+ls -lh
+# should show:
+#   tardigrade_reference_genome.fa
+#   tardigrade.fastq
+```
+
+---
+
 ## Step 1: Quality Control with FastQC
 
-Pull the container (note the explicit version tag from **Quay.io**):
+Pull the container (this will create a `.sif` file in your current directory):
 
 ```bash
 singularity pull docker://quay.io/biocontainers/fastqc:0.11.9--0
 ```
 
-Run FastQC on a FASTQ file:
+Run FastQC on the mock reads:
 
 ```bash
-singularity exec fastqc_0.11.9--0.sif fastqc sample.fastq
+singularity exec /path/to/fastqc_0.11.9--0.sif fastqc tardigrade.fastq
 ```
 
 **Expected output:**
 
-* `sample_fastqc.html` (interactive QC report)
-* `sample_fastqc.zip` (raw QC metrics)
-
-👉 Open the HTML file to explore base qualities, GC content, and read length distribution.
+* `tardigrade_fastqc.html` (interactive QC report)
+* `tardigrade_fastqc.zip` (raw QC metrics)
 
 ---
 
@@ -142,21 +174,12 @@ Pull the container:
 singularity pull docker://quay.io/biocontainers/bwa:0.7.17--hed695b0_7
 ```
 
-Run alignment:
+Run alignment against the reference genome (`.fna` file):
 
 ```bash
-singularity exec bwa_0.7.17--hed695b0_7.sif bwa mem reference.fasta sample.fastq > aligned.sam
+singularity exec /path/to/bwa_0.7.17--hed695b0_7.sif \
+    bwa mem tardigrade_reference_genome.fa tardigrade.fastq > aligned.sam
 ```
-
-**Checkpoint:**
-
-Inspect the first lines:
-
-```bash
-head aligned.sam
-```
-
-Notice the header lines (`@SQ`, `@PG`) and read alignments.
 
 ---
 
@@ -168,12 +191,12 @@ Pull the container:
 singularity pull docker://quay.io/biocontainers/samtools:1.9--h10a08f8_12
 ```
 
-Convert and sort:
+Convert, sort, and index:
 
 ```bash
 singularity exec samtools_1.9--h10a08f8_12.sif samtools view -bS aligned.sam > aligned.bam
 singularity exec samtools_1.9--h10a08f8_12.sif samtools sort aligned.bam -o aligned.sorted.bam
-singularity exec samtools_1.9--h10a08f8_12.sif samtools index aligned.sorted.bam
+singularity exec /samtools_1.9--h10a08f8_12.sif samtools index aligned.sorted.bam
 ```
 
 Get alignment stats:
@@ -183,8 +206,19 @@ singularity exec samtools_1.9--h10a08f8_12.sif samtools flagstat aligned.sorted.
 ```
 
 **Expected output:**
+A summary of how many reads mapped vs unmapped.
 
-* Summary of how many reads mapped/unmapped.
+---
+
+## 🔧 Common Pitfalls & Fixes
+
+* **`.sif` file not found** → Always use the absolute path to the `.sif`, e.g. `/path/to/fastqc_0.11.9--0.sif`.
+* **Input files missing** → Be sure to `cp` all required files into your working directory first.
+* **Files in other storage locations (e.g. `/scratch`)** → Bind them explicitly:
+
+  ```bash
+  singularity exec --bind /scratch/data:/mnt /path/to/fastqc_0.11.9--0.sif fastqc /mnt/myreads.fastq
+  ```
 
 ---
 
@@ -192,21 +226,16 @@ singularity exec samtools_1.9--h10a08f8_12.sif samtools flagstat aligned.sorted.
 
 In this tutorial you learned how to:
 
-* Pull existing containers from online registries (**Quay.io BioContainers**)
-* Run bioinformatics tools inside Singularity on HPC
-* Build a simple reproducible workflow:
-  **FastQC → BWA → SAMtools**
+* Copy files into a **working directory**
+* Run **FastQC** on mock reads
+* Align reads with **BWA**
+* Process alignments with **SAMtools**
+* Troubleshoot missing images and data paths
 
-Next steps:
-
-* Try swapping in your own FASTQ + reference genome
-* Explore other tools in BioContainers (STAR, bedtools, etc.)
-* Think about how to link multiple containerized tools into full pipelines (Snakemake, Nextflow)
-
-[Docker](https://docker-curriculum.com/)
-[Create your own container image with docker](https://chtc.cs.wisc.edu/uw-research-computing/docker-build)
+Together these steps form a reproducible workflow:
+**FastQC → BWA → SAMtools**
 
 ---
 
-👉 Do you want me to also update this tutorial with a **note on how to look up the latest version tags** on Quay.io, so readers don’t get stuck with outdated versions?
+
 
