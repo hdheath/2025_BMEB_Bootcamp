@@ -23,7 +23,7 @@ singularity pull shub://vsoch/hello-world
 singularity build hello-world.simg shub://vsoch/hello-world
 ```
 
-Now we can interact with our container either via an interactive session with`singularity shell`
+Now we can interact with our container via an interactive session with`singularity shell`
 
 ```
 singularity shell hello-world.simg
