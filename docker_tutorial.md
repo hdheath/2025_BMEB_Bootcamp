@@ -121,7 +121,7 @@ This will give you a taste of how containers are used in real research workflows
 
 ---
 
-## Step 0: Set Up Your Working Directory
+## Step 1: Set Up Your Working Directory
 
 First, create a clean working folder and copy the required files into it:
 
@@ -145,7 +145,7 @@ ls -lh
 
 ---
 
-## Step 1: Quality Control with FastQC
+## Step 2: Quality Control with FastQC
 
 Pull the container (this will create a `.sif` file in your current directory):
 
@@ -166,7 +166,7 @@ singularity exec /path/to/fastqc_0.11.9--0.sif fastqc tardigrade.fastq
 
 ---
 
-## Step 2: Alignment with BWA
+## Step 3: Alignment with BWA
 
 Pull the container:
 
@@ -183,7 +183,7 @@ singularity exec /path/to/bwa_0.7.17--hed695b0_7.sif \
 
 ---
 
-## Step 3: Alignment Stats with SAMtools
+## Step 4: Alignment Stats with SAMtools
 
 Pull the container:
 
