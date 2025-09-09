@@ -93,6 +93,10 @@ It should look something like this
 singularity exec image.simg softwareName --help  
 ```
 
+Here’s your tutorial revised so it works correctly with **Quay.io BioContainers** and explicit version tags instead of `latest` (which doesn’t exist). I’ve updated FastQC, BWA, and SAMtools accordingly:
+
+---
+
 # 🧬 Bioinformatics Workflow Example with Singularity
 
 Now that you know how to pull and run containers, let’s run a **mini bioinformatics pipeline** using BioContainers.
@@ -105,18 +109,20 @@ We’ll go through three steps:
 
 This will give you a taste of how containers are used in real research workflows.
 
+---
+
 ## Step 1: Quality Control with FastQC
 
-Pull the container:
+Pull the container (note the explicit version tag from **Quay.io**):
 
-```
-singularity pull docker://biocontainers/fastqc
+```bash
+singularity pull docker://quay.io/biocontainers/fastqc:0.11.9--0
 ```
 
 Run FastQC on a FASTQ file:
 
-```
-singularity exec fastqc_latest.sif fastqc sample.fastq
+```bash
+singularity exec fastqc_0.11.9--0.sif fastqc sample.fastq
 ```
 
 **Expected output:**
@@ -126,61 +132,67 @@ singularity exec fastqc_latest.sif fastqc sample.fastq
 
 👉 Open the HTML file to explore base qualities, GC content, and read length distribution.
 
+---
+
 ## Step 2: Alignment with BWA
 
 Pull the container:
 
-```
-singularity pull docker://biocontainers/bwa
+```bash
+singularity pull docker://quay.io/biocontainers/bwa:0.7.17--hed695b0_7
 ```
 
 Run alignment:
 
-```
-singularity exec bwa_latest.sif bwa mem reference.fasta sample.fastq > aligned.sam
+```bash
+singularity exec bwa_0.7.17--hed695b0_7.sif bwa mem reference.fasta sample.fastq > aligned.sam
 ```
 
 **Checkpoint:**
 
-* Inspect first lines:
+Inspect the first lines:
 
-```
+```bash
 head aligned.sam
 ```
 
 Notice the header lines (`@SQ`, `@PG`) and read alignments.
 
+---
+
 ## Step 3: Alignment Stats with SAMtools
 
 Pull the container:
 
-```
-singularity pull docker://biocontainers/samtools
+```bash
+singularity pull docker://quay.io/biocontainers/samtools:1.9--h10a08f8_12
 ```
 
 Convert and sort:
 
-```
-singularity exec samtools_latest.sif samtools view -bS aligned.sam > aligned.bam
-singularity exec samtools_latest.sif samtools sort aligned.bam -o aligned.sorted.bam
-singularity exec samtools_latest.sif samtools index aligned.sorted.bam
+```bash
+singularity exec samtools_1.9--h10a08f8_12.sif samtools view -bS aligned.sam > aligned.bam
+singularity exec samtools_1.9--h10a08f8_12.sif samtools sort aligned.bam -o aligned.sorted.bam
+singularity exec samtools_1.9--h10a08f8_12.sif samtools index aligned.sorted.bam
 ```
 
 Get alignment stats:
 
-```
-singularity exec samtools_latest.sif samtools flagstat aligned.sorted.bam
+```bash
+singularity exec samtools_1.9--h10a08f8_12.sif samtools flagstat aligned.sorted.bam
 ```
 
 **Expected output:**
 
 * Summary of how many reads mapped/unmapped.
 
+---
+
 ## Wrap-Up
 
 In this tutorial you learned how to:
 
-* Pull existing containers from online registries
+* Pull existing containers from online registries (**Quay.io BioContainers**)
 * Run bioinformatics tools inside Singularity on HPC
 * Build a simple reproducible workflow:
   **FastQC → BWA → SAMtools**
@@ -193,3 +205,8 @@ Next steps:
 
 [Docker](https://docker-curriculum.com/)
 [Create your own container image with docker](https://chtc.cs.wisc.edu/uw-research-computing/docker-build)
+
+---
+
+👉 Do you want me to also update this tutorial with a **note on how to look up the latest version tags** on Quay.io, so readers don’t get stuck with outdated versions?
+
