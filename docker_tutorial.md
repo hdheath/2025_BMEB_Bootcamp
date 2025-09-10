@@ -114,8 +114,8 @@ cd docker_tutorial
 Your input files are located at:
 
 ```
-/hb/home/hdheath/bmeb_bootcamp_2025/tardigrade_reference_genome.fa
-/hb/home/hdheath/bmeb_bootcamp_2025/tardigrade.fastq
+/hb/groups/bmebootcamp/2025/tardigrade_reference_genome.fa
+/hb/groups/bmebootcamp/2025/tardigrade.fastq
 ```
 
 We’ll bind this directory into our container each time we run a command where input data lives in this directory.
@@ -133,7 +133,7 @@ singularity pull docker://quay.io/biocontainers/fastqc:0.11.9--0
 Run FastQC on the mock reads by **binding the data directory**:
 
 ```bash
-singularity exec --bind /hb/home/hdheath/bmeb_bootcamp_2025:/mnt \
+singularity exec --bind /hb/groups/bmebootcamp/2025:/mnt \
     fastqc_0.11.9--0.sif fastqc /mnt/tardigrade.fastq
 ```
 
@@ -165,14 +165,14 @@ singularity pull docker://quay.io/biocontainers/bwa:0.7.17--hed695b0_7
 Build the index of the reference:
 
 ```bash
-singularity exec --bind /hb/home/hdheath/bmeb_bootcamp_2025:/mnt \
+singularity exec --bind /hb/groups/bmebootcamp/2025:/mnt \
     bwa_0.7.17--hed695b0_7.sif bwa index /mnt/tardigrade_reference_genome.fa
 ```
 
 Run alignment:
 
 ```bash
-singularity exec --bind /hb/home/hdheath/bmeb_bootcamp_2025:/mnt \
+singularity exec --bind /hb/groups/bmebootcamp/2025:/mnt \
     bwa_0.7.17--hed695b0_7.sif \
     bwa mem /mnt/tardigrade_reference_genome.fa /mnt/tardigrade.fastq > aligned.sam
 ```
