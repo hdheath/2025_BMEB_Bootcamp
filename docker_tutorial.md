@@ -195,6 +195,7 @@ singularity exec samtools_1.9--h10a08f8_12.sif samtools flagstat aligned.sorted.
 
 **Expected output:**
 
+- Alignment statistics for our dataset
 
 ---
 
