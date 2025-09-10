@@ -151,6 +151,12 @@ Pull the container:
 singularity pull docker://quay.io/biocontainers/bwa:0.7.17--hed695b0_7
 ```
 
+Build the index of the reference:
+
+```bash
+singularity exec bwa_0.7.17--hed695b0_7.sif bwa index tardigrade_reference_genome.fa
+```
+
 Run alignment against the reference genome (`.fna` file):
 
 ```bash
