@@ -78,34 +78,9 @@ singularity exec --bind ~/testData:/mnt hello-world.simg cat /mnt/data.txt
 
 That exec command should show you the contents of data.txt
 
-### finding containers
-
-There are a number of container repositories that are compatible across different container platforms. Often when you need a container there is an existing one you can use online. Here are some places you can find containers
-[https://biocontainers.pro/registry](https://biocontainers.pro/registry)
-[https://quay.io/](https://quay.io/)
-[https://hub.docker.com/](https://hub.docker.com/)
-
-Now go find a container that has some software you are familiar with, pull the image, and see if you can view the software documentation with a `singularity exec` command
-
-It should look something like this
-
-```
-singularity exec image.simg softwareName --help  
-```
-
-Here’s your tutorial revised so it works correctly with **Quay.io BioContainers** and explicit version tags instead of `latest` (which doesn’t exist). I’ve updated FastQC, BWA, and SAMtools accordingly:
 
 ---
 
-Perfect — thanks for clarifying. Since in your workshop/tutorial students will **cd into a working directory after pulling the image**, they’ll run into the same “file not found” issue unless we show them how to either (1) reference the `.sif` with its absolute path, or (2) move it into the working directory. And since their data will be in a separate folder (not in your `/hb/home/hdheath/...`), we should also explicitly teach them how to handle paths and mounts.
-
-Here’s how I’d update your tutorial to make this fool-proof:
-
----
-
-Got it 👍 — here’s the tutorial rewritten so **students use their own working directories** with **placeholders** (`/path/to/...`) instead of your personal `/hb/home/hdheath/...` paths. That way they can adapt it no matter where they’re running.
-
----
 
 # 🧬 Bioinformatics Workflow Example with Singularity
 
@@ -237,5 +212,17 @@ Together these steps form a reproducible workflow:
 
 ---
 
+## Additional Resources 
+
+[Simple Docker Explanation](https://www.reddit.com/r/docker/comments/keq9el/please_someone_explain_docker_to_me_like_i_am_an/)
+
+### finding containers
+
+There are a number of container repositories that are compatible across different container platforms. Often when you need a container there is an existing one you can use online. Here are some places you can find containers
+[https://biocontainers.pro/registry](https://biocontainers.pro/registry)
+[https://quay.io/](https://quay.io/)
+[https://hub.docker.com/](https://hub.docker.com/)
 
 
+
+---
