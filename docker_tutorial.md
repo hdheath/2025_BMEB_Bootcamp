@@ -180,6 +180,8 @@ singularity exec samtools_1.9--h10a08f8_12.sif samtools sort aligned.bam -o alig
 singularity exec samtools_1.9--h10a08f8_12.sif samtools index aligned.sorted.bam
 ```
 
+**Note how you do not have to bind data this time, as the input lives in your working directory**
+
 Get alignment stats:
 
 ```bash
