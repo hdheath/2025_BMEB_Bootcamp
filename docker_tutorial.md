@@ -83,7 +83,6 @@ That exec command should show you the contents of data.txt
 
 ---
 
-
 # 🧬 Bioinformatics Workflow Example with Singularity
 
 Now that you know how to pull and run containers, let’s run a **mini bioinformatics pipeline** using BioContainers.
@@ -100,25 +99,21 @@ This will give you a taste of how containers are used in real research workflows
 
 ## Step 1: Set Up Your Working Directory
 
-First, create a clean working folder and copy the required files into it:
+Create a clean folder for outputs:
 
 ```bash
 mkdir -p docker_tutorial
 cd docker_tutorial
-
-# Copy reference genome, assembly, and mock reads into your workdir
-cp /hb/home/hdheath/bmeb_bootcamp_2025/tardigrade_reference_genome.fa .
-cp /hb/home/hdheath/bmeb_bootcamp_2025/tardigrade.fastq .
 ```
 
-Check that the files are in place:
+Your input files are located at:
 
-```bash
-ls -lh
-# should show:
-#   tardigrade_reference_genome.fa
-#   tardigrade.fastq
 ```
+/hb/home/hdheath/bmeb_bootcamp_2025/tardigrade_reference_genome.fa
+/hb/home/hdheath/bmeb_bootcamp_2025/tardigrade.fastq
+```
+
+We’ll bind this directory into our container each time we run a command.
 
 ---
 
@@ -130,13 +125,14 @@ Pull the container (this will create a `.sif` file in your current directory):
 singularity pull docker://quay.io/biocontainers/fastqc:0.11.9--0
 ```
 
-Run FastQC on the mock reads:
+Run FastQC on the mock reads by **binding the data directory**:
 
 ```bash
-singularity exec /path/to/fastqc_0.11.9--0.sif fastqc tardigrade.fastq
+singularity exec --bind /hb/home/hdheath/bmeb_bootcamp_2025:/mnt \
+    fastqc_0.11.9--0.sif fastqc /mnt/tardigrade.fastq
 ```
 
-**Expected output:**
+**Expected output in `docker_tutorial`:**
 
 * `tardigrade_fastqc.html` (interactive QC report)
 * `tardigrade_fastqc.zip` (raw QC metrics)
@@ -154,14 +150,16 @@ singularity pull docker://quay.io/biocontainers/bwa:0.7.17--hed695b0_7
 Build the index of the reference:
 
 ```bash
-singularity exec bwa_0.7.17--hed695b0_7.sif bwa index tardigrade_reference_genome.fa
+singularity exec --bind /hb/home/hdheath/bmeb_bootcamp_2025:/mnt \
+    bwa_0.7.17--hed695b0_7.sif bwa index /mnt/tardigrade_reference_genome.fa
 ```
 
-Run alignment against the reference genome (`.fna` file):
+Run alignment:
 
 ```bash
-singularity exec /path/to/bwa_0.7.17--hed695b0_7.sif \
-    bwa mem tardigrade_reference_genome.fa tardigrade.fastq > aligned.sam
+singularity exec --bind /hb/home/hdheath/bmeb_bootcamp_2025:/mnt \
+    bwa_0.7.17--hed695b0_7.sif \
+    bwa mem /mnt/tardigrade_reference_genome.fa /mnt/tardigrade.fastq > aligned.sam
 ```
 
 ---
@@ -179,7 +177,7 @@ Convert, sort, and index:
 ```bash
 singularity exec samtools_1.9--h10a08f8_12.sif samtools view -bS aligned.sam > aligned.bam
 singularity exec samtools_1.9--h10a08f8_12.sif samtools sort aligned.bam -o aligned.sorted.bam
-singularity exec /samtools_1.9--h10a08f8_12.sif samtools index aligned.sorted.bam
+singularity exec samtools_1.9--h10a08f8_12.sif samtools index aligned.sorted.bam
 ```
 
 Get alignment stats:
@@ -189,19 +187,15 @@ singularity exec samtools_1.9--h10a08f8_12.sif samtools flagstat aligned.sorted.
 ```
 
 **Expected output:**
-A summary of how many reads mapped vs unmapped.
+
 
 ---
 
 ## 🔧 Common Pitfalls & Fixes
 
-* **`.sif` file not found** → Always use the absolute path to the `.sif`, e.g. `/path/to/fastqc_0.11.9--0.sif`.
-* **Input files missing** → Be sure to `cp` all required files into your working directory first. (or bind them) 
-* **Files in other storage locations (e.g. `/scratch`)** → Bind them explicitly:
-
-  ```bash
-  singularity exec --bind /scratch/data:/mnt /path/to/fastqc_0.11.9--0.sif fastqc /mnt/myreads.fastq
-  ```
+* **`.sif` file not found** → Use the absolute path to your `.sif` file.
+* **Input files missing** → Always bind the directory where your data lives (`--bind /hb/home/...:/mnt`).
+* **Outputs not showing up** → Remember outputs are written in the *current working directory* where you run the command.
 
 ---
 
@@ -209,22 +203,18 @@ A summary of how many reads mapped vs unmapped.
 
 In this tutorial you learned how to:
 
-* Copy files into a **working directory**
-* Run **FastQC** on mock reads
+* Run containers with **bound input directories** (no need to copy data)
+* Perform **QC with FastQC**
 * Align reads with **BWA**
 * Process alignments with **SAMtools**
-* Troubleshoot missing images and data paths
+* Troubleshoot missing data and paths
 
 ---
 
 ## Additional Resources 
 
-[Simple Docker Explanation](https://www.reddit.com/r/docker/comments/keq9el/please_someone_explain_docker_to_me_like_i_am_an/)
+[Simple Docker Explanation](https://www.reddit.com/r/docker/comments/keq9el/please_someone_explain_docker_to_me_like_i_am_an/) 
 
-There are a number of container repositories that are compatible across different container platforms. Often when you need a container there is an existing one you can use online. Here are some places you can find containers
-[https://biocontainers.pro/registry](https://biocontainers.pro/registry)
-[https://quay.io/](https://quay.io/)
-[https://hub.docker.com/](https://hub.docker.com/)
-
+There are a number of container repositories that are compatible across different container platforms. Often when you need a container there is an existing one you can use online. Here are some places you can find containers [https://biocontainers.pro/registry](https://biocontainers.pro/registry) [https://quay.io/](https://quay.io/) [https://hub.docker.com/](https://hub.docker.com/) 
 
 ---
