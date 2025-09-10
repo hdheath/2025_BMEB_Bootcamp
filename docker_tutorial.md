@@ -207,9 +207,6 @@ In this tutorial you learned how to:
 * Process alignments with **SAMtools**
 * Troubleshoot missing images and data paths
 
-Together these steps form a reproducible workflow:
-**FastQC → BWA → SAMtools**
-
 ---
 
 ## Additional Resources 
