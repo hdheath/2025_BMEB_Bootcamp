@@ -142,6 +142,16 @@ singularity exec --bind /hb/home/hdheath/bmeb_bootcamp_2025:/mnt \
 * `tardigrade_fastqc.html` (interactive QC report)
 * `tardigrade_fastqc.zip` (raw QC metrics)
 
+**Optional** pull html file from hummingbird to PC :
+
+Run this from a local, fresh terminal (not logged in to hummingbird) 
+
+```bash
+scp -r <username>@hb.ucsc.edu:/absolute/path/to/html  /absolute/local/path/to/save/location 
+```
+
+Then find your html file locally and open it (should open your browser)
+
 ---
 
 ## Step 3: Alignment with BWA
