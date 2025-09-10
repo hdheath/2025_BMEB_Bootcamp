@@ -6,7 +6,9 @@ Containers are great to familiarize yourself with as a bioinformatician, as they
 
 ## Environments - Conda
 
-First let's allocate some resources for our session and load singularity
+First login to your hummingbird account
+
+Then, let's allocate some resources for our session and load singularity
 
 ```
 salloc --partition=instruction -N 1 -n 1 -t 03:00:00 
