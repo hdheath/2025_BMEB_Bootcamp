@@ -113,7 +113,7 @@ Your input files are located at:
 /hb/home/hdheath/bmeb_bootcamp_2025/tardigrade.fastq
 ```
 
-We’ll bind this directory into our container each time we run a command.
+We’ll bind this directory into our container each time we run a command where input data lives in this directory.
 
 ---
 
