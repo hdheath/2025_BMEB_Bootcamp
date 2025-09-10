@@ -188,7 +188,7 @@ A summary of how many reads mapped vs unmapped.
 ## 🔧 Common Pitfalls & Fixes
 
 * **`.sif` file not found** → Always use the absolute path to the `.sif`, e.g. `/path/to/fastqc_0.11.9--0.sif`.
-* **Input files missing** → Be sure to `cp` all required files into your working directory first.
+* **Input files missing** → Be sure to `cp` all required files into your working directory first. (or bind them) 
 * **Files in other storage locations (e.g. `/scratch`)** → Bind them explicitly:
 
   ```bash
@@ -216,13 +216,10 @@ Together these steps form a reproducible workflow:
 
 [Simple Docker Explanation](https://www.reddit.com/r/docker/comments/keq9el/please_someone_explain_docker_to_me_like_i_am_an/)
 
-### finding containers
-
 There are a number of container repositories that are compatible across different container platforms. Often when you need a container there is an existing one you can use online. Here are some places you can find containers
 [https://biocontainers.pro/registry](https://biocontainers.pro/registry)
 [https://quay.io/](https://quay.io/)
 [https://hub.docker.com/](https://hub.docker.com/)
-
 
 
 ---
