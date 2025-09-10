@@ -87,7 +87,12 @@ That exec command should show you the contents of data.txt
 
 Now that you know how to pull and run containers, let’s run a **mini bioinformatics pipeline** using BioContainers.
 
-We’ll go through three steps:
+![Water Bear](3511.jpg.webp)
+
+**Via Google:** Tardigrades, also known as water bears or moss piglets, are microscopic, eight-legged animals famous for their extreme resilience, capable of surviving harsh conditions like dehydration, freezing, boiling, crushing pressure, and even the vacuum of space. These tiny creatures, which can grow up to 0.5 mm long, live in diverse environments worldwide, from the deep sea to the Himalayas, and can enter a reversible state of suspended animation called cryptobiosis to endure life-threatening situations. 
+
+
+We’ll go through three steps using water bear sequencing data:
 
 1. **FastQC** – quality control of sequencing reads
 2. **BWA** – aligning reads to a reference genome
