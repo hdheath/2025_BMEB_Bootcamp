@@ -134,8 +134,7 @@ singularity pull docker://quay.io/biocontainers/fastqc:0.11.9--0
 Run FastQC on the mock reads by **binding the data directory**:
 
 ```bash
-singularity exec /hb/groups/bmebootcamp/2025:/mnt \
-    fastqc_0.11.9--0.sif fastqc tardigrade.fastq
+singularity exec fastqc_0.11.9--0.sif fastqc tardigrade.fastq
 ```
 
 **Expected output in `docker_tutorial`:**
