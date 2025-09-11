@@ -118,7 +118,8 @@ Your input files are located at:
 /hb/groups/bmebootcamp/2025/tardigrade.fastq
 ```
 
-We’ll bind this directory into our container each time we run a command where input data lives in this directory.
+'cp' them in to your directory 
+
 
 ---
 
@@ -133,8 +134,8 @@ singularity pull docker://quay.io/biocontainers/fastqc:0.11.9--0
 Run FastQC on the mock reads by **binding the data directory**:
 
 ```bash
-singularity exec --bind /hb/groups/bmebootcamp/2025:/mnt \
-    fastqc_0.11.9--0.sif fastqc /mnt/tardigrade.fastq
+singularity exec /hb/groups/bmebootcamp/2025:/mnt \
+    fastqc_0.11.9--0.sif fastqc tardigrade.fastq
 ```
 
 **Expected output in `docker_tutorial`:**
@@ -165,16 +166,16 @@ singularity pull docker://quay.io/biocontainers/bwa:0.7.17--hed695b0_7
 Build the index of the reference:
 
 ```bash
-singularity exec --bind /hb/groups/bmebootcamp/2025:/mnt \
-    bwa_0.7.17--hed695b0_7.sif bwa index /mnt/tardigrade_reference_genome.fa
+singularity exec  \
+    bwa_0.7.17--hed695b0_7.sif bwa index tardigrade_reference_genome.fa
 ```
 
 Run alignment:
 
 ```bash
-singularity exec --bind /hb/groups/bmebootcamp/2025:/mnt \
+singularity exec /hb/groups/bmebootcamp/2025:/mnt \
     bwa_0.7.17--hed695b0_7.sif \
-    bwa mem /mnt/tardigrade_reference_genome.fa /mnt/tardigrade.fastq > aligned.sam
+    bwa mem tardigrade_reference_genome.fa tardigrade.fastq > aligned.sam
 ```
 
 ---
@@ -194,8 +195,6 @@ singularity exec samtools_1.9--h10a08f8_12.sif samtools view -bS aligned.sam > a
 singularity exec samtools_1.9--h10a08f8_12.sif samtools sort aligned.bam -o aligned.sorted.bam
 singularity exec samtools_1.9--h10a08f8_12.sif samtools index aligned.sorted.bam
 ```
-
-**Note how you do not have to bind data this time, as the input lives in your working directory**
 
 Get alignment stats:
 
