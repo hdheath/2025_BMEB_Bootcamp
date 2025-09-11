@@ -172,7 +172,7 @@ singularity exec  \
 Run alignment:
 
 ```bash
-singularity exec /hb/groups/bmebootcamp/2025:/mnt \
+singularity exec  \
     bwa_0.7.17--hed695b0_7.sif \
     bwa mem tardigrade_reference_genome.fa tardigrade.fastq > aligned.sam
 ```
